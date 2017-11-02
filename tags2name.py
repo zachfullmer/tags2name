@@ -35,8 +35,8 @@ class FileTags:
         'title': ['TIT2', 'TITLE', 'Title', '©nam'],
         'track_num': ['TRCK', 'TRACKNUMBER', 'Track', 'trkn'],
         'disc_num': ['TPOS', 'DISCNUMBER', 'Disc', 'disk'],
-        'year': ['TDRC', 'TYER', 'DATE', 'Year', '©day'],
-        'orig_year': ['TDOR', 'TORY', 'ORIGINALDATE', 'ORIGINALYEAR']
+        'year': ['TYER', 'Year', 'DATE', 'TDRC', '©day'],
+        'orig_year': ['TORY', 'ORIGINALYEAR', 'TDOR', 'ORIGINALDATE']
     }
     FORBIDDEN = '<>:"/\\|?*\0'
 
