@@ -170,8 +170,7 @@ def scan_album_folder(folder, file_list):
             and all((x[0] == folder_data[0][0] and x[1] == folder_data[0][1]) for x in folder_data):
         folder_name = YEAR_ENCLOSER[0] + \
             folder_data[0][0] + YEAR_ENCLOSER[1] + ' ' + folder_data[0][1]
-        parent_path = folder.replace(
-            re.search(r'[^\\/]+[\\/]?$', folder).group(), '')
+        parent_path = re.sub(r'[^\\/]+[\\/]?$', '', folder)
         if folder != '.' and folder != parent_path + folder_name:
             counter = 2
             base_dir = parent_path + folder_name
