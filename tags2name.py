@@ -7,8 +7,9 @@ import sys
 import os
 import re
 import argparse
+from mutagen.flac import FLAC
 from mutagen.id3 import ID3
-from mutagen.id3 import ID3NoHeaderError
+from mutagen import MutagenError
 
 
 def get_args():
@@ -17,7 +18,8 @@ def get_args():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '-r', help='set levels of recursion; default 0', type=int)
+        '-r', help='set levels of recursion; default 0',
+        type=int)
     return parser.parse_args()
 
 
@@ -60,7 +62,10 @@ class FileTags:
         for tag_name in FileTags.TAG_TYPES:
             for desc in FileTags.TAG_TYPES[tag_name]:
                 if desc in tags:
-                    self._tags[tag_name] = tags[desc].text[0]
+                    if type(tags[desc]) is list:
+                        self._tags[tag_name] = tags[desc][0]
+                    else:
+                        self._tags[tag_name] = tags[desc].text[0]
                     break
         # track number formatting
         match = re.match(r'(\d+)/', self._tags['track_num'])
@@ -96,7 +101,7 @@ class FileTags:
 
 YEAR_ENCLOSER = '[]'
 SEPARATOR = ' - '
-VALID_FILE_TYPES = ['.flac']
+VALID_FILE_TYPES = ['.mp3', '.flac']
 
 
 def rename_file(folder, file):
@@ -111,8 +116,11 @@ def rename_file(folder, file):
     folder_data = None
     if ext in VALID_FILE_TYPES:
         try:
-            tags = ID3(full_path)
-        except ID3NoHeaderError:
+            if ext == '.mp3':
+                tags = ID3(full_path)
+            elif ext == '.flac':
+                tags = FLAC(full_path)
+        except MutagenError:
             return (None, '', 'missing')
         file_tags = FileTags()
         file_tags.set_tags(tags)
